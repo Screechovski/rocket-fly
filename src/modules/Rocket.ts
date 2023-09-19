@@ -21,12 +21,9 @@ export class Rocket implements CanvasElement {
   friction = 0.003;
   angle = 0;
 
-  constructor(layer: Konva.Layer) {
+  constructor(layer: Konva.Layer, place: Coor) {
     this.size = new Size(40);
-    this.coor = new Coor(
-      (layer.width() - this.size.width) / 2,
-      (layer.height() - this.size.height) / 2
-    );
+    this.coor = place;
     this.speed = new Coor(0);
     this.controls = new Controls();
     this.fuel = new RocketFuel(layer, 100);
@@ -43,7 +40,7 @@ export class Rocket implements CanvasElement {
     });
 
     this.rocketCanvas.offsetX(this.size.height / 2);
-    this.rocketCanvas.offsetY(this.size.width);
+    this.rocketCanvas.offsetY(this.size.width / 2);
 
     this.layer = layer;
     this.layer.add(this.rocketCanvas);
@@ -71,7 +68,7 @@ export class Rocket implements CanvasElement {
 
   update(friction: UpdateProps) {
     if (this.controls.right) {
-      this.angle += 1;
+      this.angle += this.avgModuleSpeed * 0.9 + 0.1;
 
       if (this.angle > 180) {
         this.angle = -180;
@@ -79,7 +76,7 @@ export class Rocket implements CanvasElement {
     }
 
     if (this.controls.left) {
-      this.angle -= 1;
+      this.angle -= this.avgModuleSpeed * 0.9 + 0.1;
 
       if (this.angle < -180) {
         this.angle = 180;
@@ -93,15 +90,20 @@ export class Rocket implements CanvasElement {
       this.speed.y += Math.cos(this.getRadianAngle()) * this.acceleration;
     }
 
-    if (this.speed.x !== 0) {
-      if (this.speed.x < 0) {
-        this.speed.x += this.areaFriction;
-      } else {
-        this.speed.x -= this.areaFriction;
-      }
+    if (this.speed.x < 0) {
+      this.speed.x += friction.airFriction;
+    }
+    if (this.speed.x > 0) {
+      this.speed.x -= friction.airFriction;
+    }
+    if (this.speed.y < 0) {
+      this.speed.y += friction.airFriction;
+    }
+    if (this.speed.y > 0) {
+      this.speed.y -= friction.airFriction;
     }
 
-    this.speed.y = this.speed.y - (this.areaFriction + this.friction);
+    // this.speed.y = this.speed.y - (this.areaFriction + this.friction);
 
     if (this.controls.pause) {
       this.speed.x = 0;

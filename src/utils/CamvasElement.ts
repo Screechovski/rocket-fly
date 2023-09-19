@@ -1,6 +1,6 @@
-import { Coor } from "./Coor";
-
-type UpdateProps = Coor & {
+export type UpdateProps = {
+  x: number;
+  y: number;
   airFriction: number;
 };
 
