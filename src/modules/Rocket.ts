@@ -1,8 +1,8 @@
 import { Size } from "../utils/Size";
 import { Coor } from "../utils/Coor";
-import { Controls } from "./Controls";
+import { Controls } from "../utils/Controls";
 import { RocketFuel } from "./RocketFuel";
-import { CanvasElement } from "../utils/CamvasElement";
+import { CanvasElement, UpdateProps } from "../utils/CamvasElement";
 import Konva from "konva";
 
 export class Rocket implements CanvasElement {
@@ -15,20 +15,21 @@ export class Rocket implements CanvasElement {
   rocketCanvas: Konva.Image;
   layer: Konva.Layer;
   wasStart = false;
+  renderFair = false;
   acceleration = 0.01;
   areaFriction = 0.001;
   friction = 0.003;
   angle = 0;
 
   constructor(layer: Konva.Layer) {
-    this.size = new Size(40, 40);
+    this.size = new Size(40);
     this.coor = new Coor(
       (layer.width() - this.size.width) / 2,
       (layer.height() - this.size.height) / 2
     );
-    this.speed = new Coor(0, 0);
+    this.speed = new Coor(0);
     this.controls = new Controls();
-    this.fuel = new RocketFuel(100);
+    this.fuel = new RocketFuel(layer, 100);
     this.image = document.getElementById("rocket_image") as HTMLImageElement;
     this.wasStart = false;
 
@@ -38,8 +39,12 @@ export class Rocket implements CanvasElement {
       width: this.size.width,
       x: this.coor.x,
       y: this.coor.y,
-      offset: new Coor(30, 30),
+      fill: "green",
     });
+
+    this.rocketCanvas.offsetX(this.size.height / 2);
+    this.rocketCanvas.offsetY(this.size.width);
+
     this.layer = layer;
     this.layer.add(this.rocketCanvas);
   }
@@ -64,9 +69,9 @@ export class Rocket implements CanvasElement {
     return speed;
   }
 
-  update() {
+  update(friction: UpdateProps) {
     if (this.controls.right) {
-      this.angle += this.avgModuleSpeed * 1;
+      this.angle += 1;
 
       if (this.angle > 180) {
         this.angle = -180;
@@ -74,12 +79,14 @@ export class Rocket implements CanvasElement {
     }
 
     if (this.controls.left) {
-      this.angle -= this.avgModuleSpeed * 1;
+      this.angle -= 1;
 
       if (this.angle < -180) {
         this.angle = 180;
       }
     }
+
+    this.renderFair = this.controls.forward;
 
     if (this.controls.forward) {
       this.speed.x += Math.sin(this.getRadianAngle()) * this.acceleration;

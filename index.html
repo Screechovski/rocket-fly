@@ -7,9 +7,14 @@
     <title>Rocket fly</title>
   </head>
   <body>
-    <img src="./rocket.svg" hidden alt="Rocket image" id="rocket_image" />
+    <img src="./rocket.svg" hidden alt="Rocket image" />
+    <img src="./rocket_2.png" hidden alt="Rocket image" />
 
     <main id="container" class="main"></main>
+
+    <div class="panel">
+      <input type="range" value="0" id="rocket_power" min="0" max="100" />
+    </div>
 
     <script type="module" src="/src/main.ts"></script>
   </body>

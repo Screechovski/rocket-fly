@@ -1,3 +1,4 @@
+import Konva from "konva";
 import { CanvasElement } from "../utils/CamvasElement";
 
 export class RocketFuel implements CanvasElement {
@@ -6,30 +7,30 @@ export class RocketFuel implements CanvasElement {
   literWeight = 0.01;
   maxLitters: number;
 
-  constructor(liters: number){
+  constructor(layer: Konva.Layer, liters: number) {
     this.maxLitters = liters;
     this.liters = liters;
   }
 
-  get weight(){
+  get weight() {
     return this.tankWeight + this.literWeight * this.liters;
   }
 
-  get literPercent(){
-    return parseFloat((this.liters / this.maxLitters).toFixed(2))
+  get literPercent() {
+    return parseFloat((this.liters / this.maxLitters).toFixed(2));
   }
 
-  get hasFuel(){
+  get hasFuel() {
     return this.liters > 0;
   }
 
-  draw(ctx: CanvasRenderingContext2D){
-    const height = 80 * this.literPercent
+  draw(ctx: CanvasRenderingContext2D) {
+    const height = 80 * this.literPercent;
 
-    ctx.fillRect(10, 90, 20, -height)
+    ctx.fillRect(10, 90, 20, -height);
   }
 
-  update(){
+  update() {
     this.liters -= 0.2;
   }
 }

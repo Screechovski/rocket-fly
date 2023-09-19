@@ -17,8 +17,6 @@ export class Controls {
 
   private addKeyboardListeners() {
     document.onkeydown = (event) => {
-      console.log(event.key);
-
       switch (event.key) {
         case "ArrowLeft":
         case "a":
