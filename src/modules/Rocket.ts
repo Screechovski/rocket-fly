@@ -9,38 +9,42 @@ export class Rocket implements CanvasElement {
   coor: Coor;
   speed: Coor;
   size: Size;
-  image: HTMLImageElement;
+  image_on: HTMLImageElement;
+  image_off: HTMLImageElement;
   controls: Controls;
   fuel: RocketFuel;
   rocketCanvas: Konva.Image;
   layer: Konva.Layer;
   wasStart = false;
-  renderFair = false;
-  acceleration = 0.01;
-  areaFriction = 0.001;
-  friction = 0.003;
+  renderFire = false;
+  acceleration = 0.005;
   angle = 0;
 
   constructor(layer: Konva.Layer, place: Coor) {
-    this.size = new Size(40);
+    this.size = new Size(80, 17);
     this.coor = place;
     this.speed = new Coor(0);
     this.controls = new Controls();
     this.fuel = new RocketFuel(layer, 100);
-    this.image = document.getElementById("rocket_image") as HTMLImageElement;
+    this.image_on = document.getElementById(
+      "rocket_fire_on"
+    ) as HTMLImageElement;
+    this.image_off = document.getElementById(
+      "rocket_fire_off"
+    ) as HTMLImageElement;
     this.wasStart = false;
 
     this.rocketCanvas = new Konva.Image({
-      image: this.image,
+      image: this.image_off,
       height: this.size.height,
       width: this.size.width,
       x: this.coor.x,
       y: this.coor.y,
-      fill: "green",
+      fill: "gray",
     });
 
-    this.rocketCanvas.offsetX(this.size.height / 2);
-    this.rocketCanvas.offsetY(this.size.width / 2);
+    this.rocketCanvas.offsetX(this.size.width / 2);
+    this.rocketCanvas.offsetY(this.size.height / 2);
 
     this.layer = layer;
     this.layer.add(this.rocketCanvas);
@@ -83,11 +87,14 @@ export class Rocket implements CanvasElement {
       }
     }
 
-    this.renderFair = this.controls.forward;
+    this.renderFire = this.controls.forward;
 
     if (this.controls.forward) {
+      this.rocketCanvas.image(this.image_on);
       this.speed.x += Math.sin(this.getRadianAngle()) * this.acceleration;
       this.speed.y += Math.cos(this.getRadianAngle()) * this.acceleration;
+    } else {
+      this.rocketCanvas.image(this.image_off);
     }
 
     if (this.speed.x < 0) {
@@ -103,7 +110,8 @@ export class Rocket implements CanvasElement {
       this.speed.y -= friction.airFriction;
     }
 
-    // this.speed.y = this.speed.y - (this.areaFriction + this.friction);
+    this.speed.y += friction.y;
+    this.speed.x -= friction.x;
 
     if (this.controls.pause) {
       this.speed.x = 0;

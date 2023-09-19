@@ -1,4 +1,3 @@
-import { Island } from "./modules/Island";
 import { Rocket } from "./modules/Rocket";
 import "./style.scss";
 import Konva from "konva";
@@ -18,8 +17,16 @@ const layer = new Konva.Layer();
 
 stage.add(layer);
 
-const rocket = new Rocket(layer, new Coor(300));
-const planet1 = new Planet(layer, new Coor(150), 150, 20);
+const rocket = new Rocket(
+  layer,
+  new Coor(layer.width() - 50, layer.height() - 50)
+);
+const planet1 = new Planet(
+  layer,
+  new Coor(layer.width() / 2, layer.height() / 2),
+  100,
+  30
+);
 
 function sumFriction(...args: UpdateProps[]): UpdateProps {
   return args.reduce<UpdateProps>(
