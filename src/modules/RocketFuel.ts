@@ -6,10 +6,23 @@ export class RocketFuel implements CanvasElement {
   tankWeight = 0.1;
   literWeight = 0.01;
   maxLitters: number;
+  canvas: Konva.Rect;
+  layer: Konva.Layer;
 
   constructor(layer: Konva.Layer, liters: number) {
     this.maxLitters = liters;
     this.liters = liters;
+    this.layer = layer;
+
+    this.canvas = new Konva.Rect({
+      x: 20,
+      y: 20,
+      height: 100,
+      width: 30,
+      fill: "green",
+    });
+
+    this.layer.add(this.canvas);
   }
 
   get weight() {
@@ -24,13 +37,14 @@ export class RocketFuel implements CanvasElement {
     return this.liters > 0;
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
-    const height = 80 * this.literPercent;
+  draw() {
+    const height = 100 * this.literPercent;
 
-    ctx.fillRect(10, 90, 20, -height);
+    this.canvas.height(height);
+    this.canvas.y(120 - height);
   }
 
   update() {
-    this.liters -= 0.2;
+    this.liters -= 0.1;
   }
 }

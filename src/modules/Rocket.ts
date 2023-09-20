@@ -27,10 +27,10 @@ export class Rocket implements CanvasElement {
     this.controls = new Controls();
     this.fuel = new RocketFuel(layer, 100);
     this.image_on = document.getElementById(
-      "rocket_fire_on"
+      "rocket_fire_on",
     ) as HTMLImageElement;
     this.image_off = document.getElementById(
-      "rocket_fire_off"
+      "rocket_fire_off",
     ) as HTMLImageElement;
     this.wasStart = false;
 
@@ -90,6 +90,7 @@ export class Rocket implements CanvasElement {
     this.renderFire = this.controls.forward;
 
     if (this.controls.forward) {
+      this.fuel.update();
       this.rocketCanvas.image(this.image_on);
       this.speed.x += Math.sin(this.getRadianAngle()) * this.acceleration;
       this.speed.y += Math.cos(this.getRadianAngle()) * this.acceleration;
@@ -131,5 +132,6 @@ export class Rocket implements CanvasElement {
     this.rocketCanvas.rotation(this.angle);
     this.rocketCanvas.y(this.coor.y);
     this.rocketCanvas.x(this.coor.x);
+    this.fuel.draw();
   }
 }

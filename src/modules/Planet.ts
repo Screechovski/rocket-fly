@@ -54,16 +54,23 @@ export class Planet {
 
     // √((x - 2)² + (y - (-1))²)
     const spaceBetweenCenter = Math.sqrt(
-      Math.pow(coor.x - this.coor.x, 2) + Math.pow(coor.y - this.coor.y, 2)
+      Math.pow(coor.x - this.coor.x, 2) + Math.pow(coor.y - this.coor.y, 2),
     );
 
     if (this.R < spaceBetweenCenter) {
       return res;
     }
+
     if (spaceBetweenCenter < this.R) {
+      const percent = 1 - (spaceBetweenCenter - this.r) / (this.R - this.r);
+      const cosT = Math.cos(angleT);
+      const sinT = Math.sin(angleT);
+      const frictionX = 0.0015 * cosT * percent + 0.0015 * cosT;
+      const frictionY = 0.0015 * sinT * percent + 0.0015 * sinT;
+
       res.airFriction = 0.001;
-      res.x = 0.003 * Math.cos(angleT);
-      res.y = 0.003 * Math.sin(angleT);
+      res.x = frictionX;
+      res.y = frictionY;
 
       return res;
     }

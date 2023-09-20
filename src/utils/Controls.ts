@@ -16,22 +16,22 @@ export class Controls {
   }
 
   private addKeyboardListeners() {
-    document.onkeydown = (event) => {
-      switch (event.key) {
+    window.addEventListener("keydown", (event) => {
+      switch (event.code) {
         case "ArrowLeft":
-        case "a":
+        case "KeyA":
           this.left = true;
           break;
         case "ArrowRight":
-        case "d":
+        case "KeyD":
           this.right = true;
           break;
         case "ArrowUp":
-        case "w":
+        case "KeyW":
           this.forward = true;
           break;
         case "ArrowDown":
-        case "s":
+        case "KeyS":
           this.reverse = true;
           break;
         case " ": {
@@ -39,23 +39,23 @@ export class Controls {
           break;
         }
       }
-    };
-    document.onkeyup = (event) => {
-      switch (event.key) {
+    });
+    window.addEventListener("keyup", (event) => {
+      switch (event.code) {
         case "ArrowLeft":
-        case "a":
+        case "KeyA":
           this.left = false;
           break;
         case "ArrowRight":
-        case "d":
+        case "KeyD":
           this.right = false;
           break;
         case "ArrowUp":
-        case "w":
+        case "KeyW":
           this.forward = false;
           break;
         case "ArrowDown":
-        case "s":
+        case "KeyS":
           this.reverse = false;
           break;
         case " ": {
@@ -63,6 +63,6 @@ export class Controls {
           break;
         }
       }
-    };
+    });
   }
 }
